@@ -100,11 +100,11 @@ public class CSVFormatTest {
     public void testDuplicateHeaderElementsFalse() {
         assertThrows(
                 IllegalArgumentException.class,
-                () -> CSVFormat.DEFAULT.withAllowDuplicateHeaderNames(false).withHeader("A", "A"));
+                () -> CSVFormat.DEFAULT.withDuplicateHeaderMode(DuplicateHeaderMode.DISALLOW).withHeader("A", "A"));
     }
 
     public void testDuplicateHeaderElementsTrue() {
-        CSVFormat.DEFAULT.withAllowDuplicateHeaderNames(true).withHeader("A", "A");
+        CSVFormat.DEFAULT.withDuplicateHeaderMode(DuplicateHeaderMode.ALLOW_ALL).withHeader("A", "A");
     }
 
     @Test
@@ -188,6 +188,10 @@ public class CSVFormatTest {
                        } else if ("org.apache.commons.csv.QuoteMode".equals(type)){
                            final Object a = method.invoke(CSVFormat.DEFAULT, new Object[] {QuoteMode.MINIMAL});
                            final Object b = method.invoke(CSVFormat.DEFAULT, new Object[] {QuoteMode.ALL});
+                           assertNotEquals(name, type, a, b);
+                       } else if ("org.apache.commons.csv.DuplicateHeaderMode".equals(type)) {
+                           final Object a = method.invoke(CSVFormat.DEFAULT, new Object[] {DuplicateHeaderMode.ALLOW_ALL});
+                           final Object b = method.invoke(CSVFormat.DEFAULT, new Object[] {DuplicateHeaderMode.DISALLOW});
                            assertNotEquals(name, type, a, b);
                        } else if ("java.lang.Object[]".equals(type)){
                            final Object a = method.invoke(CSVFormat.DEFAULT, new Object[] {new Object[] {null, null}});

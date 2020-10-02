@@ -17,8 +17,6 @@
 
 package org.apache.commons.csv;
 
-import static org.apache.commons.csv.Token.Type.TOKEN;
-
 import java.io.Closeable;
 import java.io.File;
 import java.io.FileInputStream;
@@ -41,6 +39,8 @@ import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Objects;
 import java.util.TreeMap;
+
+import static org.apache.commons.csv.Token.Type.TOKEN;
 
 /**
  * Parses CSV files according to the specified format.
@@ -503,12 +503,14 @@ public final class CSVParser implements Iterable<CSVRecord>, Closeable {
                         throw new IllegalArgumentException(
                             "A header name is missing in " + Arrays.toString(headerRecord));
                     }
-                    // Note: This will always allow a duplicate header if the header is empty
+
                     final boolean containsHeader = header != null && hdrMap.containsKey(header);
-                    if (containsHeader && !emptyHeader && !this.format.getAllowDuplicateHeaderNames()) {
+                    final DuplicateHeaderMode headerRule = this.format.getDuplicateHeaderMode();
+
+                    if (containsHeader && headerRule != DuplicateHeaderMode.ALLOW_ALL && !(emptyHeader && headerRule == DuplicateHeaderMode.ALLOW_EMPTY)) {
                         throw new IllegalArgumentException(
                             String.format(
-                                "The header contains a duplicate name: \"%s\" in %s. If this is valid then use CSVFormat.withAllowDuplicateHeaderNames().",
+                                "The header contains a duplicate name: \"%s\" in %s. If this is valid then use CSVFormat.withDuplicateHeaderMode().",
                                 header, Arrays.toString(headerRecord)));
                     }
                     if (header != null) {

@@ -298,7 +298,7 @@ public class CSVParserTest {
     @Test
     public void testDuplicateHeadersNotAllowed() {
         assertThrows(IllegalArgumentException.class, () -> CSVParser.parse("a,b,a\n1,2,3\nx,y,z",
-            CSVFormat.DEFAULT.withHeader().withAllowDuplicateHeaderNames(false)));
+            CSVFormat.DEFAULT.withHeader().withDuplicateHeaderMode(DuplicateHeaderMode.DISALLOW)));
     }
 
     @Test
