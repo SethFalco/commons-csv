@@ -931,6 +931,15 @@ public class CSVFormatTest {
     }
 
     @Test
+    public void testWithEmptyDuplicates() {
+        final CSVFormat formatWithEmptyDuplicates =
+            CSVFormat.DEFAULT.withDuplicateHeaderMode(DuplicateHeaderMode.ALLOW_EMPTY);
+
+        assertEquals(DuplicateHeaderMode.ALLOW_EMPTY, formatWithEmptyDuplicates.getDuplicateHeaderMode());
+        assertFalse(formatWithEmptyDuplicates.getAllowDuplicateHeaderNames());
+    }
+
+    @Test
     public void testWithEscapeCRThrowsExceptions() {
         assertThrows(IllegalArgumentException.class, () -> CSVFormat.DEFAULT.withEscape(CR));
     }
