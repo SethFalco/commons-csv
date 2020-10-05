@@ -505,9 +505,11 @@ public final class CSVParser implements Iterable<CSVRecord>, Closeable {
                     }
 
                     final boolean containsHeader = header != null && hdrMap.containsKey(header);
-                    final DuplicateHeaderMode headerRule = this.format.getDuplicateHeaderMode();
+                    final DuplicateHeaderMode headerMode = this.format.getDuplicateHeaderMode();
+                    final boolean duplicatesAllowed = headerMode == DuplicateHeaderMode.ALLOW_ALL;
+                    final boolean emptyDuplicatesAllowed = headerMode == DuplicateHeaderMode.ALLOW_EMPTY;
 
-                    if (containsHeader && headerRule != DuplicateHeaderMode.ALLOW_ALL && !(emptyHeader && headerRule == DuplicateHeaderMode.ALLOW_EMPTY)) {
+                    if (containsHeader && !duplicatesAllowed && !(emptyHeader && emptyDuplicatesAllowed)) {
                         throw new IllegalArgumentException(
                             String.format(
                                 "The header contains a duplicate name: \"%s\" in %s. If this is valid then use CSVFormat.withDuplicateHeaderMode().",

@@ -100,11 +100,11 @@ public class CSVFormatTest {
     public void testDuplicateHeaderElementsFalse() {
         assertThrows(
                 IllegalArgumentException.class,
-                () -> CSVFormat.DEFAULT.withDuplicateHeaderMode(DuplicateHeaderMode.DISALLOW).withHeader("A", "A"));
+                () -> CSVFormat.DEFAULT.withAllowDuplicateHeaderNames(false).withHeader("A", "A"));
     }
 
     public void testDuplicateHeaderElementsTrue() {
-        CSVFormat.DEFAULT.withDuplicateHeaderMode(DuplicateHeaderMode.ALLOW_ALL).withHeader("A", "A");
+        CSVFormat.DEFAULT.withAllowDuplicateHeaderNames(true).withHeader("A", "A");
     }
 
     @Test
